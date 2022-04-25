@@ -5,16 +5,20 @@ import {
   ListContainer,
   Card,
 } from "./styles";
+// import Modal from "../../Components/Modal";
 
 import arrow from "../../Assets/images/icons/arrow.svg";
 import edit from "../../Assets/images/icons/edit.svg";
 import trash from "../../Assets/images/icons/trash.svg";
 
 import { Link } from "react-router-dom";
+// import Loader from "../../Components/Loader";
 
 export default function Home() {
   return (
     <Container>
+      {/* <Modal danger /> */}
+      {/* <Loader/> */}
       <InputSearchContainer>
         <input type="text" placeholder="Pesquisar Contato" />
       </InputSearchContainer>
@@ -52,3 +56,11 @@ export default function Home() {
     </Container>
   );
 }
+
+fetch("http://localhost:3000/")
+  .then((response) => {
+    console.log("response", response);
+  })
+  .catch((error) => {
+    console.log("error", error);
+  });

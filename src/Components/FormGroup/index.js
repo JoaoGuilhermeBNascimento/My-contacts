@@ -1,19 +1,20 @@
 import React from "react";
 import { Container } from "./styles";
-import PropTypes from 'prop-types'
+import PropTypes from "prop-types";
 
-const FormGroup = ({children}) => {
+export default function FormGroup({ children, error }) {
   return (
     <Container>
       {children}
+      {error && <small>{error}</small>}
     </Container>
   );
-};
+}
 
 FormGroup.propTypes = {
   children: PropTypes.node.isRequired,
-
-}
-
-export default FormGroup;
-  
+  error: PropTypes.string,
+};
+FormGroup.defaultProps = {
+  error: null,
+};
