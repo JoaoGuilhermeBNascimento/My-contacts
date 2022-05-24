@@ -15,14 +15,16 @@ import trash from "../../Assets/images/icons/trash.svg";
 
 import Loader from "../../Components/Loader";
 
-import delay from "../../utils/delay";
+import ContactsService from "../../services/ContactsService";
 
 export default function Home() {
   const [contacts, setContacts] = useState([]);
   const [orderBy, setOrderBy] = useState("asc");
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
 
+  //filter
   const filteredContacts = useMemo(() => {
     return contacts.filter((contact) =>
       contact.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -34,16 +36,11 @@ export default function Home() {
       try {
         setIsLoading(true);
 
-        const response = await fetch(
-          `http://localhost:3001/contacts?orderBy=${orderBy},`
-        );
+        const contactList = await ContactsService.listContacts(orderBy);
 
-        await delay(500);
-
-        const json = await response.json();
-        setContacts(json);
-      } catch (error) {
-        console.log("error", error);
+        setContacts(contactList);
+      } catch {
+        setHasError(true);
       } finally {
         setIsLoading(false);
       }
@@ -70,13 +67,16 @@ export default function Home() {
           onChange={handleChangeSearchTerm}
         />
       </InputSearchContainer>
-      <Header>
-        <strong>
-          {filteredContacts.length}
-          {filteredContacts.length === 1 ? " Contato" : " Contatos"}
-        </strong>
+      <Header hasError={hasError}>
+        {!hasError && (
+          <strong>
+            {filteredContacts.length}
+            {filteredContacts.length === 1 ? " Contato" : " Contatos"}
+          </strong>
+        )}
         <Link to="/new">Novo Contato</Link>
       </Header>
+      {hasError && <div>Ocorreu um Erro!</div>}
 
       {filteredContacts.length > 0 && (
         <ListHeader orderBy={orderBy}>
