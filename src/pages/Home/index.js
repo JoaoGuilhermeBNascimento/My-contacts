@@ -7,6 +7,8 @@ import {
   ListHeader,
   Card,
   ErrorContainer,
+  EmptyListContainer,
+  SearchNotFoundContainer,
 } from "./styles";
 // import Modal from "../../Components/Modal";
 
@@ -14,8 +16,10 @@ import arrow from "../../Assets/images/icons/arrow.svg";
 import edit from "../../Assets/images/icons/edit.svg";
 import trash from "../../Assets/images/icons/trash.svg";
 import sad from "../../Assets/images/sad.svg";
-import Button from "../../Components/Button";
+import emptyBox from "../../Assets/images/empty-box.svg";
+import magnifierQuestion from "../../Assets/images/magnifier-question.svg";
 
+import Button from "../../Components/Button";
 import Loader from "../../Components/Loader";
 
 import ContactsService from "../../services/ContactsService";
@@ -67,16 +71,27 @@ export default function Home() {
     <Container>
       {/* <Modal danger /> */}
       <Loader isLoading={isLoading} />
-      <InputSearchContainer>
-        <input
-          value={searchTerm}
-          type="text"
-          placeholder="Pesquisar Contato"
-          onChange={handleChangeSearchTerm}
-        />
-      </InputSearchContainer>
-      <Header hasError={hasError}>
-        {!hasError && (
+
+      {contacts.length > 0 && (
+        <InputSearchContainer>
+          <input
+            value={searchTerm}
+            type="text"
+            placeholder="Pesquisar Contato"
+            onChange={handleChangeSearchTerm}
+          />
+        </InputSearchContainer>
+      )}
+      <Header
+        justifyContent={
+          hasError
+            ? "flex-end"
+            : contacts.length > 0
+            ? "space-between"
+            : "center"
+        }
+      >
+        {!hasError && contacts.length > 0 && (
           <strong>
             {filteredContacts.length}
             {filteredContacts.length === 1 ? " Contato" : " Contatos"}
@@ -100,6 +115,27 @@ export default function Home() {
 
       {!hasError && (
         <>
+          {contacts.length < 1 && !isLoading && (
+            <EmptyListContainer>
+              <img src={emptyBox} alt="Empty Box" />
+
+              <p>
+                Você ainda não tem nenhum contato cadastrado! Clique no botão
+                <strong> ”Novo contato” </strong> à cima para cadastrar o seu
+                primeiro!
+              </p>
+            </EmptyListContainer>
+          )}
+
+          {contacts.length > 0 && filteredContacts.length < 1 && (
+            <SearchNotFoundContainer>
+              <img src={magnifierQuestion} alt="Magnifier Question" />
+              <span>
+                Nenhum resultado foi encontrado para{" "}
+                <strong>{searchTerm}</strong>.
+              </span>
+            </SearchNotFoundContainer>
+          )}
           {filteredContacts.length > 0 && (
             <ListHeader orderBy={orderBy}>
               <button type="button" onClick={handleToggleOrderBy}>
