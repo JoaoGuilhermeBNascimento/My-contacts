@@ -9,7 +9,7 @@ class ContactsService {
     return this.httpClient.get(`/contacts?orderBy=${orderBy}`);
   }
   async createContact(contact) {
-    return this.httpClient.post("/contacts", contact);
+    return this.httpClient.post("/contacts", { body: contact });
   }
 }
 //singleton pattern
